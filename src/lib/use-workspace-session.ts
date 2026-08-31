@@ -56,9 +56,9 @@ export function useWorkspaceSession() {
     const result = await authProvider.signInWithPassword(email, password);
     if ("error" in result) {
       setErrorMessage(result.error);
-      return false;
+      return result;
     }
-    return true;
+    return { userId: result.userId };
   }, []);
 
   const signOut = useCallback(async () => {

@@ -6,7 +6,11 @@ export class SupabaseAuthProvider implements AuthProvider {
     const supabase = getSupabaseBrowserClient();
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error || !data.user) {
-      return { error: error?.message ?? "Sign-in failed." };
+      return {
+        error: error?.message ?? "Sign-in failed with no error details returned.",
+        status: error?.status,
+        code: (error as { code?: string } | null)?.code,
+      };
     }
     return { userId: data.user.id };
   }
