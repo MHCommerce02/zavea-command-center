@@ -427,3 +427,190 @@ body {
     background-position: 0 50%;
   }
 }
+/* =========================================
+   ZAVÉA COMMAND CENTER -- BLACK / RED THEME
+   ========================================= */
+
+:root {
+  --zc-bg: #030303;
+  --zc-surface: #080808;
+  --zc-surface-2: #0d0d0d;
+
+  --zc-white: #ffffff;
+  --zc-text: #f5f5f5;
+  --zc-muted: #8a8a8a;
+
+  --zc-red: #ff1a1a;
+  --zc-red-bright: #ff2b2b;
+  --zc-red-dark: #8f0000;
+
+  --zc-black-border: #000000;
+
+  --zc-red-glow:
+    0 0 5px rgba(255, 26, 26, 0.45),
+    0 0 12px rgba(255, 26, 26, 0.18);
+}
+
+/* Main background */
+html,
+body {
+  background: var(--zc-bg) !important;
+  color: var(--zc-text);
+}
+
+/* Main app surfaces */
+.zc-card {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(15, 15, 15, 0.98),
+      rgba(5, 5, 5, 0.98)
+    ) !important;
+
+  color: var(--zc-white);
+
+  border: 1px solid var(--zc-red) !important;
+  outline: 1px solid var(--zc-black-border);
+
+  box-shadow: var(--zc-red-glow);
+
+  border-radius: 14px;
+}
+
+/* Strong white typography */
+.zc-card-title,
+.zc-eyebrow,
+.zc-metric-chip-value {
+  color: var(--zc-white) !important;
+  font-weight: 700 !important;
+}
+
+/* Main body text */
+.zc-body-text {
+  color: #d8d8d8 !important;
+}
+
+/* Muted text */
+.zc-text-muted {
+  color: var(--zc-muted) !important;
+}
+
+/* Metric chips */
+.zc-metric-chip {
+  background: #050505 !important;
+  border: 1px solid #1c1c1c !important;
+  color: var(--zc-white) !important;
+}
+
+/* Buttons */
+button {
+  color: var(--zc-white);
+  font-weight: 700;
+}
+
+/* Expand / reasoning buttons */
+.zc-expand-toggle {
+  color: #ffffff !important;
+  font-weight: 700;
+}
+
+/* Action pill */
+.zc-action-pill {
+  border: 1px solid var(--zc-red) !important;
+  outline: 1px solid #000000;
+
+  box-shadow:
+    0 0 5px rgba(255, 26, 26, 0.3);
+
+  background: #070707 !important;
+  color: #ffffff !important;
+  font-weight: 700;
+}
+
+/* Dismiss / restore */
+.zc-dismiss-btn {
+  color: #ffffff !important;
+  font-weight: 700;
+}
+
+/* Critical */
+.zc-text-critical {
+  color: var(--zc-red-bright) !important;
+  font-weight: 700 !important;
+}
+
+.zc-dot-critical {
+  background: var(--zc-red-bright) !important;
+  box-shadow:
+    0 0 5px rgba(255, 26, 26, 0.8),
+    0 0 10px rgba(255, 26, 26, 0.35);
+}
+
+/* Watch */
+.zc-text-watch {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+.zc-dot-watch {
+  background: #ffffff !important;
+}
+
+/* Good / opportunity */
+.zc-text-good {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+.zc-dot-good {
+  background: #ffffff !important;
+}
+
+/* Footer */
+.zc-card-footer {
+  color: #ffffff;
+}
+
+/* Inputs */
+input,
+textarea {
+  background: #050505 !important;
+  color: #ffffff !important;
+
+  border: 1px solid #222222 !important;
+  outline: 1px solid #000000;
+}
+
+input:focus,
+textarea:focus {
+  border-color: var(--zc-red) !important;
+
+  box-shadow:
+    0 0 5px rgba(255, 26, 26, 0.45),
+    0 0 12px rgba(255, 26, 26, 0.18);
+}
+
+/* Primary buttons */
+.zc-primary-button {
+  background: var(--zc-red) !important;
+  color: #ffffff !important;
+
+  border: 1px solid #000000 !important;
+
+  box-shadow:
+    0 0 6px rgba(255, 26, 26, 0.45);
+}
+
+.zc-primary-button:hover {
+  background: var(--zc-red-bright) !important;
+
+  box-shadow:
+    0 0 8px rgba(255, 26, 26, 0.65),
+    0 0 16px rgba(255, 26, 26, 0.25);
+}
+
+/* Thin red separators */
+.zc-divider {
+  border-color: #ff1a1a !important;
+  box-shadow: 0 0 5px rgba(255, 26, 26, 0.25);
+}
