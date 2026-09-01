@@ -7,37 +7,66 @@ const SELECT = `
   reasoning, recommended_action, estimated_duration_minutes, expected_impact, status, created_at,
   business_events (
     type,
-    event_evidence ( role, metric_snapshots ( value, metric_definitions ( display_name, unit, key ) ) )
+    event_evidence ( role, metric_snapshots ( value, metric_definitions ( display_name, unit, key, aggregation ) ) )
   ),
   recommendation_evidence (
-    metric_snapshots ( value, metric_definitions ( display_name, unit, key ) )
+    metric_snapshots ( value, metric_definitions ( display_name, unit, key, aggregation ) )
   )
 `;
 
 function formatValue(value: number, unit: string): string {
-  if (unit === "currency") return `$${value}`;
-  if (unit === "percent") return `${value}%`;
-  return `${value}`;
+  const rounded = Math.round(value * 100) / 100;
+  if (unit === "currency") return `$${rounded}`;
+  if (unit === "percent") return `${rounded}%`;
+  return `${rounded}`;
 }
 
-// Rows come back from PostgREST with loosely-typed nested embeds (the exact
-// array/object shape depends on relationship direction and can vary by
-// SDK/PostgREST version), so this mapper is deliberately defensive rather
-// than trusting a single assumed shape.
 function toArray<T>(value: T | T[] | null | undefined): T[] {
   if (!value) return [];
   return Array.isArray(value) ? value : [value];
 }
 
+interface RawMetricPoint {
+  key: string;
+  displayName: string;
+  unit: string;
+  aggregation: string;
+  value: number;
+}
+
+function summarizeMetrics(points: RawMetricPoint[]): MetricEvidence[] {
+  const groups = new Map<string, RawMetricPoint[]>();
+  for (const p of points) {
+    const existing = groups.get(p.key);
+    if (existing) existing.push(p);
+    else groups.set(p.key, [p]);
+  }
+
+  const summarized: MetricEvidence[] = [];
+  for (const group of groups.values()) {
+    const { displayName, unit, aggregation } = group[0];
+    const values = group.map((g) => g.value);
+    const aggregated =
+      aggregation === "sum" ? values.reduce((a, b) => a + b, 0) : values.reduce((a, b) => a + b, 0) / values.length;
+
+    summarized.push({
+      label: displayName,
+      value: formatValue(aggregated, unit),
+      note: group.length > 1 ? (aggregation === "sum" ? `total, ${group.length} days` : `avg, ${group.length} days`) : undefined,
+    });
+  }
+  return summarized;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapRow(row: any): Recommendation {
-  const metrics: MetricEvidence[] = [];
+  const points: RawMetricPoint[] = [];
 
   for (const event of toArray(row.business_events)) {
     for (const evidence of toArray(event?.event_evidence)) {
       for (const snap of toArray(evidence?.metric_snapshots)) {
         for (const def of toArray(snap?.metric_definitions)) {
-          metrics.push({ label: def.display_name, value: formatValue(snap.value, def.unit) });
+          points.push({ key: def.key, displayName: def.display_name, unit: def.unit, aggregation: def.aggregation, value: snap.value });
         }
       }
     }
@@ -45,7 +74,7 @@ function mapRow(row: any): Recommendation {
   for (const evidence of toArray(row.recommendation_evidence)) {
     for (const snap of toArray(evidence?.metric_snapshots)) {
       for (const def of toArray(snap?.metric_definitions)) {
-        metrics.push({ label: def.display_name, value: formatValue(snap.value, def.unit) });
+        points.push({ key: def.key, displayName: def.display_name, unit: def.unit, aggregation: def.aggregation, value: snap.value });
       }
     }
   }
@@ -67,7 +96,7 @@ function mapRow(row: any): Recommendation {
     estimatedMinutes: row.estimated_duration_minutes,
     expectedImpact: row.expected_impact,
     status: row.status,
-    metrics,
+    metrics: summarizeMetrics(points),
     eventType,
     createdAt: row.created_at,
   };
@@ -76,11 +105,6 @@ function mapRow(row: any): Recommendation {
 export class SupabaseRecommendationRepository implements RecommendationRepository {
   async listActive(workspaceId: string) {
     const supabase = getSupabaseBrowserClient();
-    // Fetches 'active' AND 'dismissed' (not 'expired'/'superseded'/'completed')
-    // so a dismissed recommendation still renders — greyed out, with a
-    // Restore action — exactly like the Phase 1 UX, and so that dismissal
-    // is visibly still true after a real page refresh rather than the row
-    // simply disappearing.
     const { data, error } = await supabase
       .from("recommendations")
       .select(SELECT)

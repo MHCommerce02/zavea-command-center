@@ -52,6 +52,7 @@ export function RecommendationCard({
             <div key={`${m.label}-${i}`} className="zc-metric-chip">
               <span className="zc-metric-chip-label">{m.label}</span>
               <span className="zc-metric-chip-value">{m.value}</span>
+              {m.note && <span className="zc-metric-chip-note">{m.note}</span>}
             </div>
           ))}
         </div>
@@ -78,23 +79,4 @@ export function RecommendationCard({
         </div>
         {rec.expectedImpact && (
           <div className="zc-footer-item zc-text-muted" style={{ flex: 1, minWidth: 0 }}>
-            <Sparkles size={13} style={{ flexShrink: 0 }} />
-            <span className="zc-truncate">{rec.expectedImpact}</span>
-          </div>
-        )}
-      </div>
-
-      <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
-        <div className="zc-action-pill">
-          <ArrowRight size={13} />
-          <span>{rec.recommendedAction}</span>
-        </div>
-      </div>
-
-      <button className="zc-dismiss-btn" onClick={onDismissOrRestore} disabled={busy}>
-        {dismissed ? <CheckCircle2 size={13} /> : <XCircle size={13} />}
-        {busy ? "Saving…" : dismissed ? "Restore" : "Dismiss"}
-      </button>
-    </div>
-  );
-}
+            
