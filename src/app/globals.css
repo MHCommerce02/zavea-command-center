@@ -614,3 +614,26 @@ textarea:focus {
   border-color: #ff1a1a !important;
   box-shadow: 0 0 5px rgba(255, 26, 26, 0.25);
 }
+
+.zc-filter-pill {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--zc-border);
+  background: transparent;
+  color: var(--zc-text);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.zc-tag-pill {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(201, 145, 91, 0.15);
+  color: var(--zc-accent, #c9915b);
+  font-size: 11px;
+}
+
+.zc-tag-pill-muted {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--zc-text-muted);
+}

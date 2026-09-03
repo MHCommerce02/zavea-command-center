@@ -1,11 +1,13 @@
-import { Recommendation, ScheduleItem, Task, TaskStatus, WorkspaceContext } from "../../domain/entities";
-
-// ---------------------------------------------------------------------------
-// Ports (interfaces). The Supabase adapter implements these today; a mock
-// adapter could implement them for tests; a future re-platform only ever
-// needs a new adapter behind these same interfaces. Nothing above this line
-// may import from providers/supabase directly.
-// ---------------------------------------------------------------------------
+import {
+  BusinessSummary,
+  DailyPnlRow,
+  Product,
+  Recommendation,
+  ScheduleItem,
+  Task,
+  TaskStatus,
+  WorkspaceContext,
+} from "../../domain/entities";
 
 export interface AuthProvider {
   signInWithPassword(
@@ -34,6 +36,18 @@ export interface TaskRepository {
 
 export interface ScheduleRepository {
   getTodayTimeline(workspaceId: string, tasks: Task[]): Promise<ScheduleItem[] | { error: string }>;
+}
+
+export interface BusinessSummaryRepository {
+  getSummary(workspaceId: string): Promise<BusinessSummary | { error: string }>;
+}
+
+export interface ProductCatalogRepository {
+  listAll(workspaceId: string): Promise<Product[] | { error: string }>;
+}
+
+export interface DailyPnlRepository {
+  listDays(workspaceId: string, days: number): Promise<DailyPnlRow[] | { error: string }>;
 }
 
 export function isError<T>(value: T | { error: string }): value is { error: string } {

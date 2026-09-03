@@ -1,17 +1,17 @@
-// Composition root. This is the ONLY file that should import concrete
-// Supabase adapters directly — every component and hook imports from here
-// and depends only on the port interface types. Swapping the backend later
-// (e.g. a different data source, or a mock for tests) means editing only
-// this file.
-
 import {
   AuthProvider,
+  BusinessSummaryRepository,
+  DailyPnlRepository,
+  ProductCatalogRepository,
   RecommendationRepository,
   ScheduleRepository,
   TaskRepository,
   WorkspaceRepository,
 } from "../providers/ports/repositories";
 import { SupabaseAuthProvider } from "../providers/supabase/auth-provider";
+import { SupabaseBusinessSummaryRepository } from "../providers/supabase/business-summary-repository";
+import { SupabaseDailyPnlRepository } from "../providers/supabase/daily-pnl-repository";
+import { SupabaseProductCatalogRepository } from "../providers/supabase/product-catalog-repository";
 import { SupabaseRecommendationRepository } from "../providers/supabase/recommendation-repository";
 import { SupabaseScheduleRepository } from "../providers/supabase/schedule-repository";
 import { SupabaseTaskRepository } from "../providers/supabase/task-repository";
@@ -22,3 +22,6 @@ export const workspaceRepository: WorkspaceRepository = new SupabaseWorkspaceRep
 export const recommendationRepository: RecommendationRepository = new SupabaseRecommendationRepository();
 export const taskRepository: TaskRepository = new SupabaseTaskRepository();
 export const scheduleRepository: ScheduleRepository = new SupabaseScheduleRepository();
+export const businessSummaryRepository: BusinessSummaryRepository = new SupabaseBusinessSummaryRepository();
+export const productCatalogRepository: ProductCatalogRepository = new SupabaseProductCatalogRepository();
+export const dailyPnlRepository: DailyPnlRepository = new SupabaseDailyPnlRepository();

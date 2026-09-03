@@ -1229,6 +1229,53 @@ export type Database = {
           },
         ]
       }
+            product_catalog: {
+        Row: {
+          colors: string[]
+          created_at: string
+          description: string | null
+          id: string
+          shopify_product_id: string
+          sizes: string[]
+          status: string
+          title: string
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          colors?: string[]
+          created_at?: string
+          description?: string | null
+          id?: string
+          shopify_product_id: string
+          sizes?: string[]
+          status: string
+          title: string
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          colors?: string[]
+          created_at?: string
+          description?: string | null
+          id?: string
+          shopify_product_id?: string
+          sizes?: string[]
+          status?: string
+          title?: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_catalog_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       workspace_members: {
         Row: {
           created_at: string
